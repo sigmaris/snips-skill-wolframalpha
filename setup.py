@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='snips_wa',
-    version='1.0.0',
+    version='1.0.1',
     description='Wolfram Alpha skill for Snips',
     author='Hugh Cole-Baker',
     url='https://github.com/sigmaris/snips-skill-wolframalpha',
