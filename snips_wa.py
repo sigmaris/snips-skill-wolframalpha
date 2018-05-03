@@ -23,6 +23,7 @@ class WolframAlphaListener(SnipsListener):
             )
         else:
             query = data.input
+        data.session_manager.continue_session("OK, I'll look that up for you.")
         res = self.wa_client.query(query)
 
         if res.success != "true":
