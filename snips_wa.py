@@ -2,11 +2,13 @@ import argparse
 import json
 import logging
 import logging.config
+import re
 
 import wolframalpha
 from snipslistener import SnipsListener, intent
 
 LOG = logging.getLogger(__name__)
+ANSWER_REGEX = re.compile(r'^([\d\.eE+-]+)\s+\w+\s+\((\w+)\)$')
 
 
 class WolframAlphaListener(SnipsListener):
@@ -50,7 +52,13 @@ class WolframAlphaListener(SnipsListener):
 
         if answer is not None:
             LOG.debug('Answer to "%s": %s', data.input, answer)
-            reply += answer
+            match = ANSWER_REGEX.match(answer)
+            if match:
+                # Sometimes answers come in the form "473.2 mL (milliliters)"
+                # Reformat that to "473.2 milliliters"
+                reply += "{} {}".format(match.group(1), match.group(2))
+            else:
+                reply += answer
             data.session_manager.end_session(reply)
 
 

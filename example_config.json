@@ -1,0 +1,25 @@
+{
+	"mqtt_host": "your.mqtt.server.here",
+	"mqtt_port": 1883,
+	"app_id": "your-wolfram-alpha-app-id-here",
+	"logging_config": {
+		"version": 1,
+		"handlers": {
+			"default": {
+				"formatter": "default",
+				"class": "logging.StreamHandler",
+				"level": "DEBUG"
+			}
+		},
+		"formatters": {
+			"default": {
+				"datefmt": "%Y-%m-%d %H:%M:%S",
+				"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+			}
+		},
+		"root": {
+			"level": "DEBUG",
+			"handlers": ["default"]
+		}
+	}
+}
