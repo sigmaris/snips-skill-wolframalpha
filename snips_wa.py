@@ -17,19 +17,20 @@ class WolframAlphaListener(SnipsListener):
         super().__init__(mqtt_host, mqtt_port)
         self.wa_client = wolframalpha.Client(app_id)
 
-    @intent('convertUnits')
+    @intent('ConvertUnits')
     def convert_units(self, data):
-        if all(slot in data.slots for slot in ('quantity', 'fromUnit', 'toUnit')):
+        if all(slot in data.slots for slot in ('quantity', 'from_unit', 'to_unit')):
             query = "convert {} {} to {}".format(
-                data.slots['quantity'].value, data.slots['fromUnit'].value, data.slots['toUnit'].value
+                data.slots['quantity'].value, data.slots['from_unit'].value, data.slots['to_unit'].value
             )
+            reply = "{} {} is ".format(data.slots['quantity'].value, data.slots['from_unit'].value)
         else:
             query = data.input
-        data.session_manager.continue_session("Okay, I'll look that up for you.")
+            reply = ''
         res = self.wa_client.query(query)
 
         if res.success != "true":
-            LOG.info("Wolfram Alpha couldn't answer %s", data.input, extra={'response': res})
+            LOG.info("Wolfram Alpha couldn't answer: %s", data.input, extra={'response': res})
             data.session_manager.end_session("Sorry, I couldn't answer that.")
             return
         else:
@@ -45,10 +46,8 @@ class WolframAlphaListener(SnipsListener):
                 subpod = next(pod.subpods)
                 answer = subpod.plaintext
 
-        reply = ''
         if interpretation is not None:
             LOG.debug('Interpretation of "%s": %s', data.input, interpretation)
-            # reply += "I interpreted that as: {}. The answer is: ".format(interpretation)
 
         if answer is not None:
             LOG.debug('Answer to "%s": %s', data.input, answer)
@@ -58,7 +57,7 @@ class WolframAlphaListener(SnipsListener):
                 # Reformat that to "473.2 milliliters"
                 reply += "{} {}".format(match.group(1), match.group(2))
             else:
-                reply += answer
+                reply += answer.replace('\n', ', ')
             data.session_manager.end_session(reply)
 
 

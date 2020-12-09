@@ -3,6 +3,7 @@
 	"mqtt_port": 1883,
 	"app_id": "your-wolfram-alpha-app-id-here",
 	"logging_config": {
+		"disable_existing_loggers": false,
 		"version": 1,
 		"handlers": {
 			"default": {
